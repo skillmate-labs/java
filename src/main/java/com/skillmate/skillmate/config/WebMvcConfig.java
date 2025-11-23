@@ -1,34 +1,57 @@
 package com.skillmate.skillmate.config;
 
-import java.util.Locale;
-
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ReloadableResourceBundleMessageSource;
+import org.springframework.core.Ordered;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.servlet.LocaleResolver;
-import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
-import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer {
 
   @Bean
-  public LocaleResolver localeResolver() {
-    SessionLocaleResolver resolver = new SessionLocaleResolver();
-    resolver.setDefaultLocale(Locale.forLanguageTag("pt-BR"));
-    return resolver;
+  public MessageSource messageSource() {
+    ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
+    messageSource.setBasename("classpath:messages");
+    messageSource.setDefaultEncoding("UTF-8");
+    messageSource.setCacheSeconds(0); // Sem cache durante desenvolvimento para debug
+    // Não usa o locale do sistema como fallback - força usar o locale especificado
+    messageSource.setFallbackToSystemLocale(false);
+    // Define o locale padrão como inglês (messages.properties)
+    messageSource.setDefaultLocale(java.util.Locale.ENGLISH);
+    // Use sempre o locale do contexto quando não especificado explicitamente
+    messageSource.setAlwaysUseMessageFormat(true);
+    return messageSource;
   }
 
   @Bean
-  public LocaleChangeInterceptor localeChangeInterceptor() {
-    LocaleChangeInterceptor interceptor = new LocaleChangeInterceptor();
-    interceptor.setParamName("lang");
-    return interceptor;
+  public LocaleResolver localeResolver() {
+    return new CustomLocaleResolver();
+  }
+
+  @Bean
+  public FilterRegistrationBean<OncePerRequestFilter> localeContextFilter() {
+    FilterRegistrationBean<OncePerRequestFilter> registration = new FilterRegistrationBean<>();
+    registration.setFilter(new LocaleContextFilter((CustomLocaleResolver) localeResolver()));
+    registration.setOrder(Ordered.HIGHEST_PRECEDENCE);
+    registration.addUrlPatterns("/api/*");
+    return registration;
+  }
+
+  @Bean
+  public LocalValidatorFactoryBean validator(MessageSource messageSource) {
+    LocalValidatorFactoryBean bean = new LocalValidatorFactoryBean();
+    bean.setValidationMessageSource(messageSource);
+    return bean;
   }
 
   @Override
-  public void addInterceptors(InterceptorRegistry registry) {
-    registry.addInterceptor(localeChangeInterceptor());
+  public org.springframework.validation.Validator getValidator() {
+    return validator(messageSource());
   }
 }

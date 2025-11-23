@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AIGoalSuggestionRequestDTO {
-  @NotBlank(message = "Experience is required")
+  @NotBlank(message = "{validation.ai-suggestion.experience.notblank}")
   private String experience;
 
-  @NotBlank(message = "Skill is required")
+  @NotBlank(message = "{validation.ai-suggestion.skill.notblank}")
   private String skill;
 }
