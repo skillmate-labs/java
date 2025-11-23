@@ -11,9 +11,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
-@Slf4j
 @RequiredArgsConstructor
 public class LocaleContextFilter extends OncePerRequestFilter {
 
@@ -23,28 +21,10 @@ public class LocaleContextFilter extends OncePerRequestFilter {
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
       FilterChain filterChain) throws ServletException, IOException {
     try {
-      // Define o locale no contexto antes de qualquer processamento
-      Locale locale = localeResolver.resolveLocale(request);
-
-      // Normaliza o locale para garantir formato correto
-      // en -> Locale.ENGLISH (para usar messages.properties - inglês padrão)
-      // pt -> Locale.forLanguageTag("pt-BR") (para usar messages_pt_BR.properties)
-      if (locale != null) {
-        String language = locale.getLanguage().toLowerCase();
-        if (language.equals("en")) {
-          locale = Locale.ENGLISH; // Locale.ENGLISH usa messages.properties (inglês padrão)
-        } else if (language.equals("pt")) {
-          locale = Locale.forLanguageTag("pt-BR");
-        }
-      }
-
+      Locale locale = LocaleUtils.normalize(localeResolver.resolveLocale(request));
       LocaleContextHolder.setLocale(locale, true);
-      log.debug("Locale definido no filtro: {} (language: {}, country: {})",
-          locale, locale.getLanguage(), locale.getCountry());
-
       filterChain.doFilter(request, response);
     } finally {
-      // Limpa o contexto após a requisição
       LocaleContextHolder.resetLocaleContext();
     }
   }

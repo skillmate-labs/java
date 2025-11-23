@@ -1,5 +1,7 @@
 package com.skillmate.skillmate.config;
 
+import java.util.Locale;
+
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
@@ -19,13 +21,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
     ReloadableResourceBundleMessageSource messageSource = new ReloadableResourceBundleMessageSource();
     messageSource.setBasename("classpath:messages");
     messageSource.setDefaultEncoding("UTF-8");
-    messageSource.setCacheSeconds(0); // Sem cache durante desenvolvimento para debug
-    // Não usa o locale do sistema como fallback - força usar o locale especificado
+    messageSource.setCacheSeconds(3600);
     messageSource.setFallbackToSystemLocale(false);
-    // Define o locale padrão como inglês (messages.properties)
-    messageSource.setDefaultLocale(java.util.Locale.ENGLISH);
-    // Use sempre o locale do contexto quando não especificado explicitamente
-    messageSource.setAlwaysUseMessageFormat(true);
+    messageSource.setDefaultLocale(Locale.ENGLISH);
     return messageSource;
   }
 
