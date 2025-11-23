@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.skillmate.skillmate.modules.goals.dto.AIGoalSuggestionDTO;
+import com.skillmate.skillmate.modules.goals.dto.AIGoalSuggestionRequestDTO;
 import com.skillmate.skillmate.modules.goals.dto.GoalDTO;
 import com.skillmate.skillmate.modules.goals.useCases.CreateGoalUseCase;
 import com.skillmate.skillmate.modules.goals.useCases.DeleteGoalUseCase;
@@ -78,10 +79,10 @@ public class GoalController {
     return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
   }
 
-  @GetMapping("/ai-suggestion")
+  @PostMapping("/ai-suggestion")
   public ResponseEntity<AIGoalSuggestionDTO> getAISuggestion(
-      @RequestParam String experience, @RequestParam String skill) {
-    AIGoalSuggestionDTO suggestion = getAIGoalSuggestionUseCase.execute(experience, skill);
+      @Valid @RequestBody AIGoalSuggestionRequestDTO request) {
+    AIGoalSuggestionDTO suggestion = getAIGoalSuggestionUseCase.execute(request.getExperience(), request.getSkill());
     return ResponseEntity.status(HttpStatus.OK).body(suggestion);
   }
 }

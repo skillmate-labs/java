@@ -81,15 +81,11 @@
 		</dependency>
 
 		<!-- Spring AI -->
-		<!-- Comentado temporariamente devido a problemas de disponibilidade do artefato -->
-		<!-- Descomente quando a dependência estiver disponível no repositório Maven -->
-		<!--
 		<dependency>
 			<groupId>org.springframework.ai</groupId>
-			<artifactId>spring-ai-openai-spring-boot-starter</artifactId>
+			<artifactId>spring-ai-ollama-spring-boot-starter</artifactId>
 			<version>${spring-ai.version}</version>
 		</dependency>
-		-->
 
 		<dependency>
 			<groupId>com.oracle.database.jdbc</groupId>
@@ -129,6 +125,17 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+
+	<repositories>
+		<repository>
+			<id>spring-milestones</id>
+			<name>Spring Milestones</name>
+			<url>https://repo.spring.io/milestone</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+	</repositories>
 
 	<build>
 		<plugins>
