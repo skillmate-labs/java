@@ -4,6 +4,10 @@
 
 A **Skillmate API** é uma aplicação Spring Boot que expõe APIs RESTful para gestão de usuários, papéis e metas (goals) de aprendizado. O projeto utiliza Oracle Database, autenticação via JWT, cache, paginação, mensageria com RabbitMQ e integração com IA (Ollama) para sugestões inteligentes de metas de aprendizado.
 
+## 🎥 Vídeo Demonstrativo
+
+Assista ao vídeo demonstrativo da solução: [SkillMate - Demonstração](https://youtu.be/umZ8lX29vEs)
+
 ## 👥 Equipe de Desenvolvimento
 
 | Nome                        | RM      | Turma    | E-mail                 | GitHub                                         | LinkedIn                                   |
